@@ -1,0 +1,21 @@
+name: Docker Image CI
+on:
+push:
+branches: [ "main" ]
+jobs:
+build:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout repository
+uses: actions/checkout@v4
+- name: Build the Docker image
+run: docker build -t my-docker-image .
+- name: Run container
+run: docker run -d --name my-container my-docker-image
+- name: Verify container is running
+run: |
+  if [ "$(docker ps -q -f name=my-container)" ]; then
+    echo "Container is running."
+  else
+    echo "Container is not running." && exit 1
+  fi
